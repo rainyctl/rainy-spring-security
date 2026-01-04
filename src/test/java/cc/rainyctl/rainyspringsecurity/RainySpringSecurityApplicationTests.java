@@ -1,5 +1,6 @@
 package cc.rainyctl.rainyspringsecurity;
 
+import cc.rainyctl.rainyspringsecurity.entity.LoginUser;
 import cc.rainyctl.rainyspringsecurity.entity.User;
 import cc.rainyctl.rainyspringsecurity.mapper.UserMapper;
 import cc.rainyctl.rainyspringsecurity.service.JwtService;
@@ -7,6 +8,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,6 +25,9 @@ class RainySpringSecurityApplicationTests {
 
     @Autowired
     private JwtService jwtService;
+
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
 
 	@Test
 	void testUserMapper() {
@@ -57,5 +62,18 @@ class RainySpringSecurityApplicationTests {
         String token = jwtService.generateToken("admin");
         assertTrue(jwtService.validateToken(token));
         assertEquals("admin", jwtService.extractUsername(token));
+    }
+
+    @Test
+    void testRedis() {
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.lambda().eq(User::getUsername, "admin");
+        User user =  userMapper.selectOne(wrapper);
+        LoginUser loginUser = new LoginUser(user);
+        String redisKey = "_login:" + user.getId();
+        redisTemplate.opsForValue().set(redisKey, loginUser);
+
+        LoginUser o = (LoginUser) redisTemplate.opsForValue().get(redisKey);
+        System.out.println(o);
     }
 }

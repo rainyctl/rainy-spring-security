@@ -1,7 +1,6 @@
 package cc.rainyctl.rainyspringsecurity.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,6 +12,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @NullMarked
+@Getter
+@ToString
 public class LoginUser implements UserDetails {
 
     private User user;
