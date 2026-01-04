@@ -11,6 +11,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @NullMarked
 @RequiredArgsConstructor
@@ -27,9 +29,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException(username);
         }
-        UserDetails userDetails = new LoginUser(user);
+        LoginUser loginUser = new LoginUser(user, List.of("test"));
         // TODO: 2. query roles
 
-        return userDetails;
+        return loginUser;
     }
 }

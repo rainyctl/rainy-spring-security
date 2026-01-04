@@ -25,12 +25,7 @@ public class LoginController {
 
     @PostMapping("/logout")
     public R<Object> logout() {
-        try {
-            loginService.logout();
-            return R.ok().message("logout success");
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            return R.fail().message("logout failed");
-        }
+        loginService.logout();
+        return R.ok().message("logout success");
     }
 }

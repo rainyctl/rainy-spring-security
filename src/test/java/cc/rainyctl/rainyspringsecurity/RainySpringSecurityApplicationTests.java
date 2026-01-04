@@ -69,7 +69,7 @@ class RainySpringSecurityApplicationTests {
         QueryWrapper<User> wrapper = new QueryWrapper<>();
         wrapper.lambda().eq(User::getUsername, "admin");
         User user =  userMapper.selectOne(wrapper);
-        LoginUser loginUser = new LoginUser(user);
+        LoginUser loginUser = new LoginUser(user, List.of("test", "admin", "ROLE_OK"));
         String redisKey = "_login:" + user.getId();
         redisTemplate.opsForValue().set(redisKey, loginUser);
 

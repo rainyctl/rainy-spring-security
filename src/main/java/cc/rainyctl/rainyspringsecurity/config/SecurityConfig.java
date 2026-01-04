@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -19,6 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 @AllArgsConstructor
 public class SecurityConfig {
 
@@ -29,7 +31,7 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable) // disable csrf for API / JWT , you may see 403 when POST /login otherwise
                 .logout(AbstractHttpConfigurer::disable) // disable built-in logout
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(authorize -> authorize.requestMatchers("/login").permitAll()
+                .authorizeHttpRequests(authorize -> authorize.requestMatchers("/login").anonymous()
                 .anyRequest().authenticated());
 
         // UsernamePasswordAuthenticationFilter handles login authentication
