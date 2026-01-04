@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
@@ -14,6 +16,9 @@ class RainySpringSecurityApplicationTests {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
 	@Test
 	void testUserMapper() {
@@ -27,5 +32,13 @@ class RainySpringSecurityApplicationTests {
         queryWrapper.lambda().eq(User::getUsername, "admin");
         User user =  userMapper.selectOne(queryWrapper);
         System.out.println(user);
+    }
+
+    @Test
+    void checkDefaultPassword() {
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.lambda().eq(User::getUsername, "admin");
+        User user =  userMapper.selectOne(wrapper);
+        assertTrue(passwordEncoder.matches("test123",user.getPassword()));
     }
 }
