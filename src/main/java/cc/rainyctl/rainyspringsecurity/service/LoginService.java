@@ -5,4 +5,6 @@ import cc.rainyctl.rainyspringsecurity.vo.response.LoginResponse;
 
 public interface LoginService {
     LoginResponse login(LoginRequest loginRequest);
+
+    void logout();
 }

@@ -27,6 +27,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
         http.csrf(AbstractHttpConfigurer::disable) // disable csrf for API / JWT , you may see 403 when POST /login otherwise
+                .logout(AbstractHttpConfigurer::disable) // disable built-in logout
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers("/login").permitAll()
                 .anyRequest().authenticated());

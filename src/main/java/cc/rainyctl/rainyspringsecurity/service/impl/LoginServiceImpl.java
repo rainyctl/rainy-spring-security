@@ -8,8 +8,10 @@ import cc.rainyctl.rainyspringsecurity.vo.response.LoginResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -44,5 +46,24 @@ public class LoginServiceImpl implements LoginService {
         redisTemplate.opsForValue().set(redisKey, principal);
 
         return new LoginResponse(jwt);
+    }
+
+    // require logged in (token in header), throw otherwise
+    // alternatively you may allow logout an anonymous user
+    @Override
+    public void logout() {
+        UsernamePasswordAuthenticationToken authenticationToken = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        if (authenticationToken == null) {
+            throw new InsufficientAuthenticationException("Not logged in");
+        }
+        LoginUser loginUser = (LoginUser) authenticationToken.getPrincipal();
+        if (loginUser == null) {
+            throw new InsufficientAuthenticationException("Not logged in");
+        }
+        Long userId = loginUser.getUser().getId();
+
+        String redisKey = "login:" + userId;
+        redisTemplate.delete(redisKey);
+        // you don't have to clear SecurityContext since it's request scope
     }
 }

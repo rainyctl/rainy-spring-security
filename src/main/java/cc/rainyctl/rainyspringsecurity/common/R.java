@@ -1,10 +1,8 @@
 package cc.rainyctl.rainyspringsecurity.common;
 
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 @Data
-@Accessors(chain = true)
 public class R<T> {
 
     private Integer code;
@@ -15,32 +13,47 @@ public class R<T> {
 
     public static <T> R<T> ok() {
         return new R<T>()
-                .setCode(ErrorCode.SUCCESS.getCode())
-                .setMessage(ErrorCode.SUCCESS.getMessage());
+                .code(ErrorCode.SUCCESS.getCode())
+                .message(ErrorCode.SUCCESS.getMessage());
     }
 
     public static <T> R<T> ok(T data) {
         return new R<T>()
-                .setCode(ErrorCode.SUCCESS.getCode())
-                .setMessage(ErrorCode.SUCCESS.getMessage())
-                .setData(data);
+                .code(ErrorCode.SUCCESS.getCode())
+                .message(ErrorCode.SUCCESS.getMessage())
+                .data(data);
     }
 
     public static <T> R<T> fail() {
         return new R<T>()
-                .setCode(ErrorCode.SERVER_ERROR.getCode())
-                .setMessage(ErrorCode.SERVER_ERROR.getMessage());
+                .code(ErrorCode.SERVER_ERROR.getCode())
+                .message(ErrorCode.SERVER_ERROR.getMessage());
     }
 
     public static <T> R<T> fail(String message) {
         return new R<T>()
-                .setCode(ErrorCode.SERVER_ERROR.getCode())
-                .setMessage(message);
+                .code(ErrorCode.SERVER_ERROR.getCode())
+                .message(message);
     }
 
     public static <T> R<T> fail(Integer code, String message) {
         return new R<T>()
-                .setCode(code)
-                .setMessage(message);
+                .code(code)
+                .message(message);
+    }
+
+    public R<T> code(Integer code) {
+        this.code = code;
+        return this;
+    }
+
+    public R<T> message(String message) {
+        this.message = message;
+        return this;
+    }
+
+    public R<T> data(T data) {
+        this.data = data;
+        return this;
     }
 }
