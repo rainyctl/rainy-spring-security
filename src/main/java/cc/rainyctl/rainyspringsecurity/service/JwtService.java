@@ -1,17 +1,19 @@
 package cc.rainyctl.rainyspringsecurity.service;
 
+import io.jsonwebtoken.Claims;
+
 import java.util.Map;
 
 public interface JwtService {
     /**
-     * Generate a JWT for a username with no extra claims.
+     * Generate a JWT for a user.
      */
-    String generateToken(String username);
+    String generateToken(Long userId, String username);
 
     /**
-     * Generate a JWT for a username with extra custom claims.
+     * Generate a JWT for a user.
      */
-    String generateToken(String username, Map<String, Object> claims);
+    String generateToken(Long userId, String username, Map<String, Object> claims);
 
     /**
      * Validate a token (signature + expiration).
@@ -20,7 +22,17 @@ public interface JwtService {
     boolean validateToken(String token);
 
     /**
-     * Extract username (subject) from token.
+     * Extract username from token.
      */
     String extractUsername(String token);
+
+    /**
+     * Extract user id (subject) from token.
+     */
+    Long extractUserId(String token);
+
+    /**
+     * Parse token and return JWT claims.
+     */
+    Claims extractClaims(String token);
 }

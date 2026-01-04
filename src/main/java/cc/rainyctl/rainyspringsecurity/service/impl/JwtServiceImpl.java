@@ -23,14 +23,15 @@ public class JwtServiceImpl implements JwtService {
     private long jwtTTL;
 
     @Override
-    public String generateToken(String username) {
-        return generateToken(username, Map.of());
+    public String generateToken(Long userId, String username) {
+        return generateToken(userId, username, Map.of());
     }
 
     @Override
-    public String generateToken(String username, Map<String, Object> extraClaims) {
+    public String generateToken(Long userId, String username, Map<String, Object> extraClaims) {
         return Jwts.builder()
-                .subject(username)
+                .subject(String.valueOf(userId))
+                .claim("username", username)
                 .claims(extraClaims)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + jwtTTL))
@@ -50,7 +51,17 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public String extractUsername(String token) {
-        return parseClaims(token).getSubject();
+        return (String) parseClaims(token).get("username");
+    }
+
+    @Override
+    public Long extractUserId(String token) {
+        return Long.valueOf(parseClaims(token).getSubject());
+    }
+
+    @Override
+    public Claims extractClaims(String token) {
+        return null;
     }
 
     private SecretKey key() {

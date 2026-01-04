@@ -1,5 +1,7 @@
 package cc.rainyctl.rainyspringsecurity.config;
 
+import cc.rainyctl.rainyspringsecurity.filter.JwtAuthenticationTokenFilter;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,10 +15,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
+@AllArgsConstructor
 public class SecurityConfig {
+
+    private final JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
@@ -24,6 +30,12 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers("/login").permitAll()
                 .anyRequest().authenticated());
+
+        // UsernamePasswordAuthenticationFilter handles login authentication
+        // we want JWT auth to run earlier, so request with token never reaches login filter
+        // and Spring Security will already know the user
+        http.addFilterBefore(jwtAuthenticationTokenFilter,
+                UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

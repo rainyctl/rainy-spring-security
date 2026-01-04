@@ -53,13 +53,13 @@ class RainySpringSecurityApplicationTests {
 
     @Test
     void signJwt() {
-        String token = jwtService.generateToken("admin");
+        String token = jwtService.generateToken(1L, "admin");
         System.out.println(token);
     }
 
     @Test
     void validateToken() {
-        String token = jwtService.generateToken("admin");
+        String token = jwtService.generateToken(1L, "admin");
         assertTrue(jwtService.validateToken(token));
         assertEquals("admin", jwtService.extractUsername(token));
     }

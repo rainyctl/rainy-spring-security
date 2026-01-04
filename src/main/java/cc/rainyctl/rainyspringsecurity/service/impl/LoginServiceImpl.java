@@ -36,10 +36,10 @@ public class LoginServiceImpl implements LoginService {
         }
 
         // 3. generate JWT token
-        String jwt = jwtService.generateToken(principal.getUsername());
+        Long userId = principal.getUser().getId();
+        String jwt = jwtService.generateToken(userId, principal.getUsername());
 
         // 4. save LoginUser in Redis (Key = login:userId) to reduce DB access later
-        Long userId = principal.getUser().getId();
         String redisKey = "login:" + userId;
         redisTemplate.opsForValue().set(redisKey, principal);
 
