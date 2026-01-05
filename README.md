@@ -109,6 +109,11 @@ spring.redis.port=6379
 spring.redis.password=
 ```
 
+## Frontend (Optional)
+
+Frontend project for testing CORS / APIs:
+[Rainy-AI-Frontend](https://github.com/rainyctl/rainy-ai-frontend)
+
 ## Notes
 
 Commonly Used Spring Security Exceptions:
