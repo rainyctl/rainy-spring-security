@@ -23,4 +23,10 @@ public class HelloController {
     public String hello3() {
         return "ok, you have sys:book:delete";
     }
+
+    @GetMapping("/hello4")
+    @PreAuthorize("@cer.hasModuleAuthority('sys:*')")
+    public String hello4() {
+        return "ok, you have sys:*";
+    }
 }
