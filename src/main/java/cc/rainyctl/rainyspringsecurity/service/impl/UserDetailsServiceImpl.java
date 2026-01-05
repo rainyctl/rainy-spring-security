@@ -2,6 +2,7 @@ package cc.rainyctl.rainyspringsecurity.service.impl;
 
 import cc.rainyctl.rainyspringsecurity.entity.LoginUser;
 import cc.rainyctl.rainyspringsecurity.entity.User;
+import cc.rainyctl.rainyspringsecurity.mapper.MenuMapper;
 import cc.rainyctl.rainyspringsecurity.mapper.UserMapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserMapper userMapper;
 
+    private final MenuMapper menuMapper;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         // 1. load user
@@ -29,9 +32,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException(username);
         }
-        LoginUser loginUser = new LoginUser(user, List.of("test"));
-        // TODO: 2. query roles
+        // 2. query permissions
+        List<String> permKeys = menuMapper.selectPermKeysByUserId(user.getId());
 
-        return loginUser;
+        return new LoginUser(user, permKeys);
     }
 }

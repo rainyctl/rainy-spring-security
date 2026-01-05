@@ -1,7 +1,9 @@
 package cc.rainyctl.rainyspringsecurity;
 
 import cc.rainyctl.rainyspringsecurity.entity.LoginUser;
+import cc.rainyctl.rainyspringsecurity.entity.Menu;
 import cc.rainyctl.rainyspringsecurity.entity.User;
+import cc.rainyctl.rainyspringsecurity.mapper.MenuMapper;
 import cc.rainyctl.rainyspringsecurity.mapper.UserMapper;
 import cc.rainyctl.rainyspringsecurity.service.JwtService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -28,6 +30,9 @@ class RainySpringSecurityApplicationTests {
 
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
+
+    @Autowired
+    private MenuMapper menuMapper;
 
 	@Test
 	void testUserMapper() {
@@ -75,5 +80,29 @@ class RainySpringSecurityApplicationTests {
 
         LoginUser o = (LoginUser) redisTemplate.opsForValue().get(redisKey);
         System.out.println(o);
+    }
+
+    @Test
+    void testMenus() {
+        List<Menu> menus = menuMapper.selectList(null);
+        System.out.println(menus);
+    }
+
+    @Test
+    void testFindMenusByUserId() {
+        List<Menu> menus = menuMapper.selectMenusByUserId(1L);
+        System.out.println(menus);
+
+        List<String> perms = menuMapper.selectPermKeysByUserId(1L);
+        System.out.println(perms);
+    }
+
+    @Test
+    void testFindMenusByUserId2() {
+        List<Menu> menus = menuMapper.selectMenusByUserId(2L);
+        System.out.println(menus);
+
+        List<String> perms = menuMapper.selectPermKeysByUserId(2L);
+        System.out.println(perms);
     }
 }

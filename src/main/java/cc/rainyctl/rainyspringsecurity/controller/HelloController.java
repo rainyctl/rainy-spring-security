@@ -17,4 +17,10 @@ public class HelloController {
     public String hello2() {
         return "ok, you have test authority";
     }
+
+    @GetMapping("/hello3")
+    @PreAuthorize("hasAuthority('sys:book:delete')")
+    public String hello3() {
+        return "ok, you have sys:book:delete";
+    }
 }
